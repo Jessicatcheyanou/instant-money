@@ -14,6 +14,7 @@ import { AppFeaturesComponent } from './app-features/app-features.component';
 import { BasicFeaturesComponent } from './basic-features/basic-features.component';
 import { CallToActionComponent } from './call-to-action/call-to-action.component';
 import { AppBadgeSectionComponent } from './app-badge-section/app-badge-section.component';
+import { ConversionFormComponent } from './conversion-form/conversion-form.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { AppBadgeSectionComponent } from './app-badge-section/app-badge-section.
     AppFeaturesComponent,
     BasicFeaturesComponent,
     CallToActionComponent,
-    AppBadgeSectionComponent
+    AppBadgeSectionComponent,
+    ConversionFormComponent
   ],
   imports: [
     BrowserModule,
