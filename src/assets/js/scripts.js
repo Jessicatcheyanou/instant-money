@@ -31,62 +31,45 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     });
 
-    // include api for currency change
-    const api = "https://api.exchangerate-api.com/v4/latest/USD";
-
     // for selecting different controls
-    var search = document.querySelector(".searchBox");
-    var convert = document.querySelector(".convert");
-    var fromCurrency = document.querySelector(".from");
-    var toCurrency = document.querySelector(".to");
-    var finalValue = document.querySelector(".finalValue");
-    var finalAmount = document.getElementById("finalAmount");
+    var search = document.getElementById("send");
+    var finalValue = document.getElementById("receive");
+    var fromCurrency = document.getElementById("sel1");
+    var toCurrency = document.getElementById("sel2");
+    var rateElement = document.getElementById("rate");
+
     var resultFrom;
     var resultTo;
-    var searchValue;
+
+    //fetch exchange rates and update the DOM
+
+    function calculate(){
+       resultFrom = fromCurrency.value;
+       resultTo = toCurrency.value;
+
+       fetch(`https://api.exchangerate-api.com/v4/latest/${resultFrom}`)
+       .then(currency => currency.json())
+       .then((data) => {
+        var rate = data.rates[resultTo];
+
+        rateElement.innerText = `Rate: 1 ${resultFrom} = ${rate} ${resultTo}`;
+        finalValue.value = ( search.value * rate).toFixed(2);
+
+       })
+
+    }
 
     // Event when currency is changed
-    fromCurrency.addEventListener('change', (event) => {
-    	resultFrom = `${event.target.value}`;
-    });
+    fromCurrency.addEventListener('change', calculate);
 
-    // Event when currency is changed
-    toCurrency.addEventListener('change', (event) => {
-    	resultTo = `${event.target.value}`;
-    });
+    search.addEventListener('input',calculate);
 
-    search.addEventListener('input', updateValue);
+    toCurrency.addEventListener('change', calculate);
 
-    // function for updating value
-    function updateValue(e) {
-    	searchValue = e.target.value;
-    }
+    finalValue.addEventListener('input', calculate);
 
-    // when user clicks, it calls function getresults
-    convert.addEventListener("click", getResults);
-
-    // function getresults
-    function getResults() {
-    	fetch(`${api}`)
-    		.then(currency => {
-    			return currency.json();
-    		}).then(displayResults);
-    }
-
-    // display results after convertion
-    function displayResults(currency) {
-    	let fromRate = currency.rates[resultFrom];
-    	let toRate = currency.rates[resultTo];
-    	finalValue.innerHTML =
-    	((toRate / fromRate) * searchValue).toFixed(2);
-    	finalAmount.style.display = "block";
-    }
+   calculate();
 
 });
 
-// when user click on reset button
-    function clearVal() {
-    	window.location.reload();
-    	document.getElementsByClassName("finalValue").innerHTML = "";
-    };
 
